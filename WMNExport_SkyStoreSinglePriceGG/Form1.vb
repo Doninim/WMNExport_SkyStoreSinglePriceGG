@@ -9,6 +9,7 @@ Public Class FormMain
     Dim flagTGVal(30) As Integer
     Dim j As Integer
 
+
     Dim cmdeSolver As ADODB.Command
     Dim rsteS As ADODB.Recordset
 
