@@ -32,6 +32,8 @@ Public Class FormMain
     Dim cmdWmnind As ADODB.Command
     Dim rstWmn As ADODB.Recordset
     Dim rstWmn2 As ADODB.Recordset
+    Dim cmdWmnClass As ADODB.Command
+    Dim rstWmnClass As ADODB.Recordset
 
     Dim dataUltAgg As DateTime = DateTime.Now
     Dim str_dataUltAgg As String
@@ -153,6 +155,9 @@ Public Class FormMain
 
         cmdWmnind = New ADODB.Command
         cmdWmnind.let_ActiveConnection(connWmn)
+
+        cmdWmnClass = New ADODB.Command
+        cmdWmnClass.let_ActiveConnection(connWmn)
 
         Application.DoEvents()
 
@@ -750,9 +755,9 @@ Public Class FormMain
         Try
             cmdeSolver2.Execute()
         Catch ex As Exception
-            MsgBox("SELECT DETAIL ARTICOLI")
-            MsgBox(ex.Message)
-            MsgBox(cmdeSolver2.CommandText)
+            'MsgBox("SELECT DETAIL ARTICOLI")
+            'MsgBox(ex.Message)
+            'MsgBox(cmdeSolver2.CommandText)
         End Try
 
         rsteS2 = New ADODB.Recordset
@@ -803,15 +808,35 @@ Public Class FormMain
             Try
                 cmdWmn.Execute()
             Catch ex As Exception
-                MsgBox("INSERT TIE ARTICOLI")
-                MsgBox(ex.Message)
-                MsgBox(cmdWmn.CommandText)
+                'MsgBox("INSERT TIE ARTICOLI")
+                'MsgBox(ex.Message)
+                'MsgBox(cmdWmn.CommandText)
             End Try
 
-            ' inserimento riga nel tieArtClass
-            cmdWmnArt.CommandText = "INSERT INTO tieArtClass VALUES ('" & codart & "_" & rsteS2.Fields("CodFamiglia").Value & "', '" & rsteS2.Fields("CodFamiglia").Value & "', '" & codart & "', " & annullato.ToString() & ", 2, '" & str_dataUltAgg & "', 0, '')"
-            cmdWmnArt.CommandType = ADODB.CommandTypeEnum.adCmdText
-            cmdWmnArt.Execute()
+
+            cmdWmnClass.CommandText = "SELECT * FROM tieArtClass WHERE Cod_PK = '" & codart & "_" & rsteS2.Fields("CodFamiglia").Value & "'"
+            cmdWmnClass.CommandType = ADODB.CommandTypeEnum.adCmdText
+            cmdWmnClass.Execute()
+
+            rstWmnClass = New ADODB.Recordset
+            rstWmnClass.CursorType = ADODB.CursorTypeEnum.adOpenKeyset
+            rstWmnClass.LockType = ADODB.LockTypeEnum.adLockOptimistic
+            rstWmnClass.Open(cmdWmnClass)
+
+            If rstWmnClass.RecordCount = 0 Then
+                ' inserimento riga nel tieArtClass se non presente
+                cmdWmnArt.CommandText = "INSERT INTO tieArtClass VALUES ('" & codart & "_" & rsteS2.Fields("CodFamiglia").Value & "', '" & rsteS2.Fields("CodFamiglia").Value & "', '" & codart & "', " & annullato.ToString() & ", 2, '" & str_dataUltAgg & "', 0, '')"
+                cmdWmnArt.CommandType = ADODB.CommandTypeEnum.adCmdText
+                cmdWmnArt.Execute()
+            End If
+
+            rstWmnClass.Close()
+
+
+            '' inserimento riga nel tieArtClass
+            'cmdWmnArt.CommandText = "INSERT INTO tieArtClass VALUES ('" & codart & "_" & rsteS2.Fields("CodFamiglia").Value & "', '" & rsteS2.Fields("CodFamiglia").Value & "', '" & codart & "', " & annullato.ToString() & ", 2, '" & str_dataUltAgg & "', 0, '')"
+            'cmdWmnArt.CommandType = ADODB.CommandTypeEnum.adCmdText
+            'cmdWmnArt.Execute()
 
         End If
 
@@ -886,9 +911,9 @@ Public Class FormMain
 
                         cmdWmn.Execute()
                     Catch ex As Exception
-                        MsgBox("INSERT TIE VARIANTI")
-                        MsgBox(ex.Message)
-                        MsgBox(cmdWmn.CommandText)
+                        'MsgBox("INSERT TIE VARIANTI")
+                        'MsgBox(ex.Message)
+                        'MsgBox(cmdWmn.CommandText)
                     End Try
                 End If
             Next
