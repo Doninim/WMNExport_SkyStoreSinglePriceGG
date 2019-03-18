@@ -71,7 +71,7 @@ Public Class FormMain
     Dim dtInizioA As String = ""
 
     Dim mydocpath As String = ""
-    Dim nameFile As String = "LogSkyPrz.log"
+    Dim nameFile As String = ""
     Dim file As System.IO.StreamWriter
 
 
@@ -1067,11 +1067,23 @@ Public Class FormMain
 
         Dim strArg() As String
         Dim inifilname As String
+        Dim stazione As String
         strArg = Command().Split(" ")
 
         inifilname = strArg(0)
+        stazione = strArg(1)
+
+        'MsgBox(stazione)
+
+        'MsgBox(inifilname)
 
         readIniFile(inifilname)
+
+
+
+        nameFile = "LogSkyPrz" + stazione + ".log"
+
+        'MsgBox(nameFile)
 
         Call LanciaEsportazioneSingola()
 
