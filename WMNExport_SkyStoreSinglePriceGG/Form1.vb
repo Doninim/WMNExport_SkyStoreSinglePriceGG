@@ -935,6 +935,7 @@ Public Class FormMain
             file.WriteLine("Codice marca da " & CODMARCA_DA & " a " & CODMARCA_A & vbCrLf)
             file.WriteLine("Codice linea da " & LINEA_DA & " a " & LINEA_A & vbCrLf)
             file.WriteLine("Codice stagione da " & STAGIONE_DA & " a " & STAGIONE_A & vbCrLf)
+            file.WriteLine("Negozio: " & CODNEG & " - " & DESNEG & vbCrLf)
 
             Do Until rsteSList.EOF
                 fine_str = "20991231"
@@ -1053,6 +1054,8 @@ Public Class FormMain
                             cmdWmn.CommandText = "INSERT INTO tiePrzVendita VALUES ('" & chiaveList & "', '" & codart & "', '" & codice & "', '" & rsteSList.Fields("CodiceNegozioSky").Value & "', '',1, '" & rsteSList.Fields("CodValuta").Value & "', " & prezzo_str & ",0, '" & rsteSList.Fields("DataInizioValidita").Value & "', " & dataFine & ", " & annullato.ToString() & ", 2, '" & str_dataUltAgg & "', 0 , '', '')"
                             cmdWmn.CommandType = ADODB.CommandTypeEnum.adCmdText
                             cmdWmn.Execute()
+
+                            file.WriteLine(cmdWmn.CommandText & vbCrLf)
 
                             'file.WriteLine("Operatore e filtri | " & OPERATORE & ";" & CODARTICOLO_DA & ";" & CODARTICOLO_A & ";" & CODMARCA_DA & ";" & CODMARCA_A & ";" & STAGIONE_DA & ";" & STAGIONE_A & ";" & LINEA_DA & ";" & LINEA_A & ";" & CODLIS_VEN & ";" & vbCrLf)
                             'file.WriteLine("Valori esportati | " & rsteSList.Fields("CodiceNegozioSky").Value & ";" & chiaveList & ";" & codart & ";" & prezzo_str & vbCrLf & vbCrLf)
